@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, InputGroup } from 'react-bootstrap';
 import { addSolutionq } from '../redux/Actions/Solutions';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 function FastCons() {
   // States for each individual field
@@ -30,9 +30,7 @@ function FastCons() {
   const [residenceType, setResidenceType] = useState('');
 
   const [currentStep, setCurrentStep] = useState(0); // Track which group of fields to show
-
   const dispatch = useDispatch();
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,35 +63,6 @@ function FastCons() {
     dispatch(addSolutionq(formData));
   
     // Optionally log the form data for debugging
-    console.log(formData);
-  };
-
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = {
-      age,
-      course,
-      gender,
-      cgpa,
-      stressLevel,
-      depressionScore,
-      anxietyScore,
-      sleepQuality,
-      physicalActivity,
-      dietQuality,
-      socialSupport,
-      relationshipStatus,
-      substanceUse,
-      counselingServiceUse,
-      familyHistory,
-      chronicIllness,
-      financialStress,
-      extracurricularInvolvement,
-      semesterCreditLoad,
-      residenceType,
-    };
     console.log(formData);
   };
 
@@ -359,16 +328,13 @@ function FastCons() {
               </>
             )}
 
+            {/* Step Navigation Buttons */}
             <div className="d-flex justify-content-between">
-              {currentStep > 0 && (
-                <Button variant="secondary" onClick={handlePrevious}>Previous</Button>
-              )}
-              {currentStep < 3 ? (
-                <Button variant="primary" onClick={handleNext}>Next</Button>
-              ) : (
-                <Button variant="primary" type="submit">Submit</Button>
-              )}
+              <Button variant="secondary" onClick={handlePrevious} disabled={currentStep === 0}>Previous</Button>
+              <Button variant="primary" onClick={handleNext} disabled={currentStep === 3}>Next</Button>
             </div>
+
+            <Button variant="success" type="submit" className="mt-3" disabled={currentStep !== 3}>Submit</Button>
           </Form>
         </Card.Body>
       </Card>
