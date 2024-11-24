@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, InputGroup } from 'react-bootstrap';
-import { addSolutionq } from '../redux/Actions/Solutions';
+import { addSolutionq } from '../redux/Actions/Solutions'; // Your Redux action
 import { useDispatch } from 'react-redux';
 
 function FastCons() {
@@ -32,10 +32,9 @@ function FastCons() {
   const [currentStep, setCurrentStep] = useState(0); // Track which group of fields to show
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    // Collect form data
+  // Function to handle form submission
+  const handleClick = () => {
+    // Prepare the form data
     const formData = {
       age,
       course,
@@ -58,20 +57,30 @@ function FastCons() {
       semesterCreditLoad,
       residenceType,
     };
-  
-    // Dispatch the action to store data
-    dispatch(addSolutionq(formData));
-  
-    // Optionally log the form data for debugging
-    console.log(formData);
+
+    // Dispatch the action if all fields are filled
+    if (
+      age && course && gender && cgpa && stressLevel &&
+      depressionScore && anxietyScore && sleepQuality &&
+      physicalActivity && dietQuality && socialSupport &&
+      relationshipStatus && substanceUse && counselingServiceUse &&
+      familyHistory && chronicIllness && financialStress &&
+      extracurricularInvolvement && semesterCreditLoad && residenceType
+    ) {
+      dispatch(addSolutionq(formData)); // Dispatch the form data
+    } else {
+      alert('Please fill all fields before submitting');
+    }
   };
 
+  // Handle next step navigation
   const handleNext = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
   };
 
+  // Handle previous step navigation
   const handlePrevious = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
@@ -83,7 +92,7 @@ function FastCons() {
       <Card style={{ width: '100%', maxWidth: '36rem', borderRadius: '10px', boxShadow: '0px 4px 20px rgba(0,0,0,0.1)' }}>
         <Card.Body>
           <Card.Title>Form Input</Card.Title>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e) => e.preventDefault()}>
             {/* First group of 5 fields */}
             {currentStep === 0 && (
               <>
@@ -328,13 +337,18 @@ function FastCons() {
               </>
             )}
 
-            {/* Step Navigation Buttons */}
+            {/* Navigation buttons */}
             <div className="d-flex justify-content-between">
-              <Button variant="secondary" onClick={handlePrevious} disabled={currentStep === 0}>Previous</Button>
-              <Button variant="primary" onClick={handleNext} disabled={currentStep === 3}>Next</Button>
+              {currentStep > 0 && (
+                <Button variant="secondary" onClick={handlePrevious}>Previous</Button>
+              )}
+              {currentStep < 3 && (
+                <Button variant="primary" onClick={handleNext}>Next</Button>
+              )}
+              {currentStep === 3 && (
+                <Button variant="success" onClick={handleClick}>Submit</Button>
+              )}
             </div>
-
-            <Button variant="success" type="submit" className="mt-3" disabled={currentStep !== 3}>Submit</Button>
           </Form>
         </Card.Body>
       </Card>
